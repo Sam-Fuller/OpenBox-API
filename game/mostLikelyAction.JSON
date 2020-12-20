@@ -1,0 +1,487 @@
+{
+    "_id": "0000",
+    "name": "Most Likely Action",
+    "description": "The first game",
+    "author": "sammieaurelia",
+
+    "defaultResource": "",
+
+    "game": {
+        "initialState": {
+            "baseState": "loginState",
+            "overrides": {
+                "maxPlayers": 2
+            }
+        },
+
+        "stateChange": [
+            {
+                "condition": {
+                    "type": "operation",
+                    "value": {
+                        "operation": "currentState",
+                        "data": "loginState"
+                    }
+                },
+                "prerequisites": [
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "local",
+                                    "value": "shuffledPlayers"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "shuffle",
+                                        "data": {
+                                            "type": "state",
+                                            "value": "players"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "local",
+                                    "value": "judge"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "property",
+                                        "data": [
+                                            {
+                                                "type": "local",
+                                                "value": "shuffledPlayers"
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "local",
+                                    "value": "notJudging"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "slice",
+                                        "data": [
+                                            {
+                                                "type": "local",
+                                                "value": "shuffledPlayers"
+                                            },
+                                            1
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "state": {
+                    "baseState": "allButOneSubmitState",
+                    "overrides": {
+                        "notSubmittingPlayer": {
+                            "type": "operation",
+                            "value": {
+                                "operation": "property",
+                                "data": [
+                                    {
+                                        "type": "local",
+                                        "value": "judge"
+                                    },
+                                    "id"
+                                ]
+                            }
+                        },
+                        "yetToJudge": {
+                            "type": "local",
+                            "value": "notJudging"
+                        }
+                    }
+                }
+            },
+
+            {
+                "condition": {
+                    "type": "operation",
+                    "value": {
+                        "operation": "and",
+                        "data": [
+                            {
+                                "type": "operation",
+                                "value": {
+                                    "operation": "isEmpty",
+                                    "data": {
+                                        "type": "state",
+                                        "value": "yetToJudge"
+                                    }
+                                }
+                            },
+
+                            {
+                                "type": "operation",
+                                "value": {
+                                    "operation": "currentState",
+                                    "data": "resultsState"
+                                }
+                            }
+                    
+                        ]
+                    }
+                },
+                "state": {
+                    "baseState": "destroyState"
+                }
+            },
+
+            {
+                "condition": {
+                    "type": "operation",
+                    "value": {
+                        "operation": "currentState",
+                        "data": "allButOneSubmitState"
+                    }
+                },
+                "state": {
+                    "baseState": "singleJudgeState",
+                    "overrides": {
+                        "choices": {
+                            "type": "state",
+                            "value": "responses"
+                        },
+                        "judge": {
+                            "type": "state",
+                            "value": "notSubmittingPlayer"
+                        },
+                        "yetToJudge": {
+                            "type": "state",
+                            "value": "yetToJudge"
+                        }
+                    }
+                }
+            },
+
+            {
+                "condition": {
+                    "type": "operation",
+                    "value": {
+                        "operation": "isEmpty",
+                        "data": {
+                            "type": "state",
+                            "value": "yetToJudge"
+                        }
+                    }
+                },
+                "prerequisites": [
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "local",
+                                    "value": "winningPlayers"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "map",
+                                        "data": [
+                                            {
+                                                "type": "operation",
+                                                "value": {
+                                                    "operation": "filter",
+                                                    "data": [
+                                                        {
+                                                            "type": "state",
+                                                            "value": "choices"
+                                                        },
+                                                        "response",
+                                                        {
+                                                            "type": "operation",
+                                                            "value": {
+                                                                "operation": "trueEqual",
+                                                                "data": [
+                                                                    {
+                                                                        "type": "operation",
+                                                                        "value": {
+                                                                            "operation": "property",
+                                                                            "data": [
+                                                                                {
+                                                                                    "type": "parameter",
+                                                                                    "value": "response"
+                                                                                },
+                                                                                "content"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "type": "state",
+                                                                        "value": "response"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response",
+                                            {
+                                                "type": "operation",
+                                                "value": {
+                                                    "operation": "property",
+                                                    "data": [
+                                                        {
+                                                            "type": "parameter",
+                                                            "value": "response"
+                                                        },
+                                                        "id"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "state",
+                                    "value": "players"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "increaseScore",
+                                        "data": [
+                                            {
+                                                "type": "local",
+                                                "value": "winningPlayers"
+                                            },
+                                            1
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "state": {
+                    "baseState": "resultsState",
+                    "overrides": {
+                        "yetToJudge": {
+                            "type": "array",
+                            "value": []
+                        }
+                    }
+                }
+            },
+
+            {
+                "condition": {
+                    "type": "operation",
+                    "value": {
+                        "operation": "currentState",
+                        "data": "singleJudgeState"
+                    }
+                },
+                "prerequisites": [
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "local",
+                                    "value": "winningPlayers"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "map",
+                                        "data": [
+                                            {
+                                                "type": "operation",
+                                                "value": {
+                                                    "operation": "filter",
+                                                    "data": [
+                                                        {
+                                                            "type": "state",
+                                                            "value": "choices"
+                                                        },
+                                                        "response",
+                                                        {
+                                                            "type": "operation",
+                                                            "value": {
+                                                                "operation": "trueEqual",
+                                                                "data": [
+                                                                    {
+                                                                        "type": "operation",
+                                                                        "value": {
+                                                                            "operation": "property",
+                                                                            "data": [
+                                                                                {
+                                                                                    "type": "parameter",
+                                                                                    "value": "response"
+                                                                                },
+                                                                                "content"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "type": "state",
+                                                                        "value": "response"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response",
+                                            {
+                                                "type": "operation",
+                                                "value": {
+                                                    "operation": "property",
+                                                    "data": [
+                                                        {
+                                                            "type": "parameter",
+                                                            "value": "response"
+                                                        },
+                                                        "id"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "state",
+                                    "value": "players"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "increaseScore",
+                                        "data": [
+                                            {
+                                                "type": "local",
+                                                "value": "winningPlayers"
+                                            },
+                                            1
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                            "data": [
+                                {
+                                    "type": "local",
+                                    "value": "judge"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "property",
+                                        "data": [
+                                            {
+                                                "type": "state",
+                                                "value": "yetToJudge"
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "type": "operation",
+                        "value": {
+                            "operation": "assign",
+                                "data": [
+                                {
+                                    "type": "local",
+                                    "value": "notJudging"
+                                },
+                                {
+                                    "type": "operation",
+                                    "value": {
+                                        "operation": "slice",
+                                        "data": [
+                                            {
+                                                "type": "state",
+                                                "value": "yetToJudge"
+                                            },
+                                            1
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "state": {
+                    "baseState": "allButOneSubmitState",
+                    "overrides": {
+                        "notSubmittingPlayer": {
+                            "type": "operation",
+                            "value": {
+                                "operation": "property",
+                                "data": [
+                                    {
+                                        "type": "local",
+                                        "value": "judge"
+                                    },
+                                    "id"
+                                ]
+                            }
+                        },
+                        "yetToJudge": {
+                            "type": "local",
+                            "value": "notJudging"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
