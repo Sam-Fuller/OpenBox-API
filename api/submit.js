@@ -4,7 +4,7 @@ const messageSender = require("../messageSender")
 const database = require("../database")
 const getStateByName = require("../state/_getStateByName")
 const destroyState = require("../state/destroyState")
-const {interpretInitialState, interpretStateChange} = require("../game/gameInterpreter")
+const {interpretInitialState, interpretStateChange} = require("../template/templateInterpreter")
 
 module.exports = function submit(request, response) {
     const headers = request.headers

@@ -4,7 +4,7 @@ const messageSender = require("../messageSender")
 const database = require("../database")
 const getStateByName = require("../state/_getStateByName")
 const destroyState = require("../state/destroyState")
-const {interpretInitialState, interpretStateChange} = require("../game/gameInterpreter")
+const {interpretInitialState, interpretStateChange} = require("../template/templateInterpreter")
 
 const fs = require("fs")
 
@@ -14,7 +14,7 @@ const randomNumbersInGameId = 0;
 const timeNumbersInPlayerId = 4
 const randomNumbersInPlayerId = 4;
 
-module.exports = function create(request, response) {
+module.exports = function createGame(request, response) {
     const body = request.body
 
     if (!body.gamecode) {

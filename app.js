@@ -1,36 +1,39 @@
 //@ts-check
-//node -r esm app.js
 
 const express = require('express')
 const bodyParser = require('body-parser')
 
 const getState = require("./api/getState")
 const submit = require('./api/submit')
-const create = require('./api/create')
+const createGame = require('./api/create')
 const login = require('./api/login')
 const getGames = require('./api/getGames')
 
 const app = express()
 const jsonParser = bodyParser.json()
 
-app.get('/', (request, response) => {
+app.get('/game/state', (request, response) => {
   getState(request, response)
 })
 
-app.post('/', jsonParser, (request, response) => {
+app.post('/game/submit', jsonParser, (request, response) => {
   submit(request, response)
 })
 
-app.post('/game', jsonParser, (request, response) => {
-  create(request, response)
+app.post('/game/create', jsonParser, (request, response) => {
+  createGame(request, response)
 })
 
-app.post('/join', jsonParser, (request, response) => {
+app.post('/game/join', jsonParser, (request, response) => {
   login(request, response)
 })
 
-app.get('/games', (request, response) => {
+app.get('/templates/list', (request, response) => {
   getGames(request, response)
+})
+
+app.post('/templates/create', jsonParser, () =>  {
+  
 })
 
 module.exports = app;
