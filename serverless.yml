@@ -1,16 +1,18 @@
 service: my-serverless-app
 
 provider:
- name: aws
- runtime: nodejs12.x
- memorySize: 128
- timeout: 10
- stage: production
- region: eu-central-1
+    name: aws
+    runtime: nodejs12.x
+    memorySize: 128
+    timeout: 10
+    stage: production
+    region: eu-central-1
 
 functions:
- api:
-   handler: lambda.universal
-   events:
-     - http: ANY {proxy+}
-     - http: ANY /
+    api:
+        handler: lambda.universal
+        events:
+            - http: GET /lobby
+            - http: POST /lobby
+            - http: GET /lobby/players
+            - http: PUT /lobby/players
