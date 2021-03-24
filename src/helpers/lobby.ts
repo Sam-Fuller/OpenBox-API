@@ -5,16 +5,19 @@ import { APIError } from '../types/types';
 import { formatPlayerResponse } from './player';
 import { generateGameCode } from '../helpers/gameCode';
 import { lobbyDB } from '../database/database';
-import uuid from 'uuid-random';
 
-export const createLobby = (player: Player): Lobby => {
+export const createLobby = async (player: Player): Promise<Lobby> => {
     const lobby: Lobby = {
-        _id: uuid(),
-        code: generateGameCode(),
+        _id: await generateGameCode(),
+        host: player,
         players: [player],
     };
 
-    lobbyDB.create(lobby);
+    const created = await lobbyDB.create(lobby);
+
+    if (!created) {
+        throw new APIError(500, `Could not create lobby`);
+    }
 
     return lobby;
 };
@@ -29,6 +32,10 @@ export const getLobbyById = async (id: string): Promise<Lobby> => {
     return lobby;
 };
 
+export const deleteLobby = async (lobby: Lobby): Promise<void> => {
+    await lobbyDB.deleteOne({ _id: lobby._id });
+};
+
 export const addPlayerToLobby = async (
     lobbyId: string,
     player: Player,
@@ -36,16 +43,39 @@ export const addPlayerToLobby = async (
     const lobby: Lobby = await getLobbyById(lobbyId);
 
     lobby.players.push(player);
-    lobbyDB.findOneAndUpdate({ id: lobbyId }, { players: lobby.players });
+    const updatedLobby = await lobbyDB.findOneAndUpdate(
+        { _id: lobbyId },
+        { players: lobby.players },
+    );
+
+    if (!updatedLobby) {
+        throw new APIError(500, `Could not add player`);
+    }
 
     return lobby;
+};
+
+export const removePlayerFromLobby = async (
+    lobby: Lobby,
+    targetPlayer: Player,
+): Promise<Lobby> => {
+    const updatedLobby = await lobbyDB.findOneAndUpdate(
+        { _id: lobby._id },
+        { $pull: { players: { _id: targetPlayer._id } } },
+    );
+
+    if (!updatedLobby) {
+        throw new APIError(500, `Could not remove player`);
+    }
+
+    return updatedLobby;
 };
 
 export const formatLobbyResponse = (lobby: Lobby): LobbyResponse => {
     return {
         _id: lobby._id,
-        code: lobby.code,
 
+        host: lobby.host,
         players: lobby.players.map(
             (player: Player): PlayerResponse => formatPlayerResponse(player),
         ),

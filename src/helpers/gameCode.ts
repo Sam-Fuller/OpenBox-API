@@ -1,7 +1,10 @@
+import { APIError } from '../types/types';
+import { lobbyDB } from '../database/database';
+
 const timeNumbersInGameId = 4;
 const randomNumbersInGameId = 1;
 
-export const generateGameCode = (): string => {
+export const generateGameCode = async (): Promise<string> => {
     const id = (Date.now() % Math.pow(36, timeNumbersInGameId))
         .toString(36)
         .toUpperCase();
@@ -9,6 +12,12 @@ export const generateGameCode = (): string => {
         + Math.floor(Math.random() * Math.pow(36, randomNumbersInGameId))
             .toString(36)
             .toUpperCase();
+
+    const existingLobby = await lobbyDB.findById(id);
+
+    if (existingLobby) {
+        throw new APIError(503, `Server is busy, try again`);
+    }
 
     return id;
 };

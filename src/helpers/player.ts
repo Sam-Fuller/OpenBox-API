@@ -4,7 +4,9 @@ import {
     PlayerSecretResponse,
 } from '../types/playerTypes';
 
+import { APIError } from '../types/types';
 import Base64 from 'crypto-js/enc-base64';
+import { Lobby } from '../types/lobbyTypes';
 import crypto from 'crypto';
 import sha512 from 'crypto-js/sha512';
 import uuid from 'uuid-random';
@@ -26,6 +28,36 @@ export const createPlayer = (
     };
 
     return { player, secret };
+};
+
+export const verifyPlayer = (player: Player, secret: string): void => {
+    if (player.hash !== secretToHash(secret, player._id)) {
+        throw new APIError(403, `Player secret does not match`);
+    }
+};
+
+export const verifyPlayerHost = (lobby: Lobby, player: Player): void => {
+    if (player._id !== lobby.host._id) {
+        throw new APIError(403, `Player does not have permission`);
+    }
+};
+
+export const verifyPlayerNotHost = (lobby: Lobby, player: Player): void => {
+    if (player._id !== lobby.host._id) {
+        throw new APIError(403, `Player is lobby host`);
+    }
+};
+
+export const getPlayer = (lobby: Lobby, playerId: string): Player => {
+    const player = lobby.players.find(
+        (player: Player) => player._id === playerId,
+    );
+
+    if (!player) {
+        throw new APIError(404, `Player not found`);
+    }
+
+    return player;
 };
 
 export const formatPlayerResponse = (player: Player): PlayerResponse => {

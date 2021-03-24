@@ -13,13 +13,16 @@ const nameValidation = (name: string): string => {
     return name;
 };
 
-const idValidation = (id: string | string[] | undefined): string => {
+const stringValidation = (
+    id: string | string[] | undefined,
+    message: string,
+): string => {
     if (!id) {
-        throw new APIError(400, `No lobbyId provided`);
+        throw new APIError(400, `No ${message} provided`);
     }
 
     if (!(typeof id === `string`)) {
-        throw new APIError(400, `Invalid lobbyId`);
+        throw new APIError(400, `Invalid ${message}`);
     }
 
     return id;
@@ -29,6 +32,18 @@ export const getPlayerName = (request: Request): string => {
     return nameValidation(request.body?.playername);
 };
 
+export const getPlayerId = (request: Request): string => {
+    return stringValidation(request.headers?.playerid, `playerId`);
+};
+
+export const getPlayerSecret = (request: Request): string => {
+    return stringValidation(request.headers?.secret, `secret`);
+};
+
+export const getTargetPlayerId = (request: Request): string => {
+    return stringValidation(request.body?.playerid, `playerId`);
+};
+
 export const getLobbyId = (request: Request): string => {
-    return idValidation(request.headers?.lobbyid);
+    return stringValidation(request.headers?.lobbyid, `lobbyId`);
 };
