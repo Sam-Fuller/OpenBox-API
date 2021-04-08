@@ -1,3 +1,4 @@
+import { Gamemode } from '../types/gamemodeTypes';
 import { Lobby } from '../types/lobbyTypes';
 import dotenv from 'dotenv';
 import { getModelForClass } from '@typegoose/typegoose';
@@ -21,3 +22,4 @@ db.once(`open`, () => {
 });
 
 export const lobbyDB = getModelForClass(Lobby);
+export const gamemodeDB = getModelForClass(Gamemode);

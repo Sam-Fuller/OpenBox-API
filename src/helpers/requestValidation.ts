@@ -13,7 +13,7 @@ const nameValidation = (name: string): string => {
     return name;
 };
 
-const stringValidation = (
+const idValidation = (
     id: string | string[] | undefined,
     message: string,
 ): string => {
@@ -29,21 +29,25 @@ const stringValidation = (
 };
 
 export const getPlayerName = (request: Request): string => {
-    return nameValidation(request.body?.playername);
+    return nameValidation(request.body?.playerName);
 };
 
 export const getPlayerId = (request: Request): string => {
-    return stringValidation(request.headers?.playerid, `playerId`);
+    return idValidation(request.headers?.playerid, `playerId`);
 };
 
 export const getPlayerSecret = (request: Request): string => {
-    return stringValidation(request.headers?.secret, `secret`);
+    return idValidation(request.headers?.secret, `secret`);
 };
 
 export const getTargetPlayerId = (request: Request): string => {
-    return stringValidation(request.body?.playerid, `playerId`);
+    return idValidation(request.body?.playerId, `target playerId`);
 };
 
 export const getLobbyId = (request: Request): string => {
-    return stringValidation(request.headers?.lobbyid, `lobbyId`);
+    return idValidation(request.headers?.lobbyid, `lobbyId`);
+};
+
+export const getGamemodeId = (request: Request): string => {
+    return idValidation(request.headers?.gamemodeid, `gamemodeId`);
 };

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { deleteLobby } from './lobby/DELETE';
 import { deleteLobbyPlayers } from './lobby/players/DELETE';
+import { getGamemode } from './gamemode/GET';
 import { getLobby } from './lobby/GET';
 import { getLobbyPlayers } from './lobby/players/GET';
 import { postLobby } from './lobby/POST';
@@ -15,53 +16,90 @@ const app = express();
 const jsonParser = bodyParser.json();
 
 const allowlist = [
-    `https://www.open-box.io`,
     `https://open-box.io`,
-    `https://localhost`,
-    `http://localhost`,
-    `localhost`,
-    `https://localhost:3000`,
-    `http://localhost:3000`,
-    `localhost:3000`,
+    `http://open-box.io`,
+    `https://www.open-box.io`,
+    `http://www.open-box.io`,
 ];
-const corsOptionsDelegate = function (req: Request, callback: any) {
+
+const corsOptionsDelegate = (req: any, callback: any) => {
     let corsOptions;
-    const corsOrigin = req.header(`Origin`);
-
-    console.log(`origin`, corsOrigin);
-
-    if (corsOrigin && allowlist.indexOf(corsOrigin) !== -1) {
+    console.log(`origin`, req.header(`Origin`));
+    if (allowlist.indexOf(req.header(`Origin`)) !== -1) {
         corsOptions = { origin: true };
     } else {
-        corsOptions = { origin: true };
+        corsOptions = { origin: false };
     }
     callback(null, corsOptions);
 };
 
-app.use(cors());
+app.options(`/lobby`, cors(corsOptionsDelegate));
 
-app.delete(`/lobby`, jsonParser, (request, response) => {
-    responseWrapper(request, response, deleteLobby);
-});
+app.delete(
+    `/lobby`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, deleteLobby);
+    },
+);
 
-app.get(`/lobby`, jsonParser, (request, response) => {
-    responseWrapper(request, response, getLobby);
-});
+app.get(
+    `/lobby`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, getLobby);
+    },
+);
 
-app.post(`/lobby`, jsonParser, (request, response) => {
-    responseWrapper(request, response, postLobby);
-});
+app.post(
+    `/lobby`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, postLobby);
+    },
+);
 
-app.delete(`/lobby/players`, jsonParser, (request, response) => {
-    responseWrapper(request, response, deleteLobbyPlayers);
-});
+app.options(`/lobby/players`, cors(corsOptionsDelegate));
 
-app.get(`/lobby/players`, jsonParser, (request, response) => {
-    responseWrapper(request, response, getLobbyPlayers);
-});
+app.delete(
+    `/lobby/players`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, deleteLobbyPlayers);
+    },
+);
 
-app.put(`/lobby/players`, jsonParser, (request, response) => {
-    responseWrapper(request, response, putLobbyPlayers);
-});
+app.get(
+    `/lobby/players`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, getLobbyPlayers);
+    },
+);
+
+app.put(
+    `/lobby/players`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, putLobbyPlayers);
+    },
+);
+
+app.options(`/gamemode`, cors(corsOptionsDelegate));
+
+app.get(
+    `/gamemode`,
+    cors(corsOptionsDelegate),
+    jsonParser,
+    (request, response) => {
+        responseWrapper(request, response, getGamemode);
+    },
+);
 
 module.exports = app;

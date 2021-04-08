@@ -21,7 +21,7 @@ import { Request } from 'express';
 
 export const deleteLobbyPlayers = async (
     request: Request,
-): Promise<unknown> => {
+): Promise<{ lobby: LobbyResponse }> => {
     const playerId = getPlayerId(request);
     const playerSecret = getPlayerSecret(request);
     const targetPlayerId = getTargetPlayerId(request);
@@ -32,10 +32,15 @@ export const deleteLobbyPlayers = async (
     const targetPlayer = getPlayer(lobby, targetPlayerId);
 
     verifyPlayer(player, playerSecret);
-    verifyPlayerHost(lobby, player);
+    if (player._id !== targetPlayer._id) {
+        verifyPlayerHost(lobby, player);
+    }
     verifyPlayerNotHost(lobby, targetPlayer);
 
-    const updatedLobby = await removePlayerFromLobby(lobby, targetPlayer);
+    await removePlayerFromLobby(lobby, targetPlayer);
+    const updatedLobby = await getLobbyById(lobbyId);
 
-    return {};
+    return {
+        lobby: formatLobbyResponse(updatedLobby),
+    };
 };

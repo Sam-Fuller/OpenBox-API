@@ -43,7 +43,7 @@ export const verifyPlayerHost = (lobby: Lobby, player: Player): void => {
 };
 
 export const verifyPlayerNotHost = (lobby: Lobby, player: Player): void => {
-    if (player._id !== lobby.host._id) {
+    if (player._id === lobby.host._id) {
         throw new APIError(403, `Player is lobby host`);
     }
 };
@@ -60,20 +60,16 @@ export const getPlayer = (lobby: Lobby, playerId: string): Player => {
     return player;
 };
 
-export const formatPlayerResponse = (player: Player): PlayerResponse => {
-    return {
-        _id: player._id,
-        name: player.name,
-    };
-};
+export const formatPlayerResponse = (player: Player): PlayerResponse => ({
+    _id: player._id,
+    name: player.name,
+});
 
 export const formatPlayerSecretResponse = (
     player: Player,
     secret: string,
-): PlayerSecretResponse => {
-    return {
-        _id: player._id,
-        secret: secret,
-        name: player.name,
-    };
-};
+): PlayerSecretResponse => ({
+    _id: player._id,
+    secret: secret,
+    name: player.name,
+});

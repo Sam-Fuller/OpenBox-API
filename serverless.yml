@@ -12,9 +12,13 @@ functions:
     api:
         handler: lambda.universal
         events:
+            - http: OPTIONS /lobby
             - http: DELETE /lobby
             - http: GET /lobby
             - http: POST /lobby
+            - http: OPTIONS /lobby/players
             - http: DELETE /lobby/players
             - http: GET /lobby/players
             - http: PUT /lobby/players
+            - http: OPTIONS /gamemode
+            - http: GET /gamemode

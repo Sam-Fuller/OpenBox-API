@@ -71,13 +71,11 @@ export const removePlayerFromLobby = async (
     return updatedLobby;
 };
 
-export const formatLobbyResponse = (lobby: Lobby): LobbyResponse => {
-    return {
-        _id: lobby._id,
+export const formatLobbyResponse = (lobby: Lobby): LobbyResponse => ({
+    _id: lobby._id,
 
-        host: lobby.host,
-        players: lobby.players.map(
-            (player: Player): PlayerResponse => formatPlayerResponse(player),
-        ),
-    };
-};
+    host: formatPlayerResponse(lobby.host),
+    players: lobby.players.map(
+        (player: Player): PlayerResponse => formatPlayerResponse(player),
+    ),
+});

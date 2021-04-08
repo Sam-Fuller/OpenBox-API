@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@typegoose/typegoose": "^7.6.0",
+    "amplify": "0.0.11",
     "aws-serverless-express": "^3.4.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
