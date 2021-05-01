@@ -22,6 +22,14 @@ import { Request } from 'express';
 export const deleteLobbyPlayers = async (
     request: Request,
 ): Promise<{ lobby: LobbyResponse }> => {
+    console.log(
+        `headers`,
+        typeof request.headers,
+        JSON.stringify(request.headers),
+    );
+
+    console.log(`body`, typeof request.body, JSON.stringify(request.body));
+
     const playerId = getPlayerId(request);
     const playerSecret = getPlayerSecret(request);
     const targetPlayerId = getTargetPlayerId(request);
@@ -37,10 +45,10 @@ export const deleteLobbyPlayers = async (
     }
     verifyPlayerNotHost(lobby, targetPlayer);
 
-    await removePlayerFromLobby(lobby, targetPlayer);
+    await removePlayerFromLobby(lobbyId, targetPlayer);
     const updatedLobby = await getLobbyById(lobbyId);
 
     return {
-        lobby: formatLobbyResponse(updatedLobby),
+        lobby: await formatLobbyResponse(updatedLobby),
     };
 };

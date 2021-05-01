@@ -20,5 +20,9 @@ functions:
             - http: DELETE /lobby/players
             - http: GET /lobby/players
             - http: PUT /lobby/players
+            - http: OPTIONS /lobby/game
+            - http: DELETE /lobby/game
+            - http: GET /lobby/game
+            - http: PUT /lobby/game
             - http: OPTIONS /gamemode
             - http: GET /gamemode

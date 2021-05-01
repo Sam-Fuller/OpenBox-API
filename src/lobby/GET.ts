@@ -12,6 +12,6 @@ export const getLobby = async (
     const lobby = await getLobbyById(lobbyId);
 
     return {
-        lobby: formatLobbyResponse(lobby),
+        lobby: await formatLobbyResponse(lobby),
     };
 };

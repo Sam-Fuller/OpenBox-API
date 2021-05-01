@@ -21,7 +21,7 @@ const idValidation = (
         throw new APIError(400, `No ${message} provided`);
     }
 
-    if (!(typeof id === `string`)) {
+    if (typeof id !== `string`) {
         throw new APIError(400, `Invalid ${message}`);
     }
 
@@ -45,9 +45,9 @@ export const getTargetPlayerId = (request: Request): string => {
 };
 
 export const getLobbyId = (request: Request): string => {
-    return idValidation(request.headers?.lobbyid, `lobbyId`);
+    return idValidation(request.headers?.lobbyid, `lobbyId`).toUpperCase();
 };
 
 export const getGamemodeId = (request: Request): string => {
-    return idValidation(request.headers?.gamemodeid, `gamemodeId`);
+    return idValidation(request.body?.gamemodeId, `gamemodeId`);
 };

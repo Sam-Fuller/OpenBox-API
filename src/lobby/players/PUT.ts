@@ -20,6 +20,6 @@ export const putLobbyPlayers = async (
 
     return {
         player: formatPlayerSecretResponse(player, secret),
-        lobby: formatLobbyResponse(lobby),
+        lobby: await formatLobbyResponse(lobby),
     };
 };
