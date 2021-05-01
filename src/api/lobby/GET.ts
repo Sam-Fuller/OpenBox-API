@@ -1,8 +1,8 @@
-import { formatLobbyResponse, getLobbyById } from '../helpers/lobby';
+import { formatLobbyResponse, getLobbyById } from '../../helpers/lobby';
 
-import { LobbyResponse } from '../types/lobbyTypes';
+import { LobbyResponse } from '../../types/lobbyTypes';
 import { Request } from 'express';
-import { getLobbyId } from '../helpers/requestValidation';
+import { getLobbyId } from '../../helpers/requestValidation';
 
 export const getLobby = async (
     request: Request,

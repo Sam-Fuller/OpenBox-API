@@ -1,13 +1,17 @@
 import {
     deleteLobby as deleteLobbyFunction,
     getLobbyById,
-} from '../helpers/lobby';
+} from '../../helpers/lobby';
 import {
     getLobbyId,
     getPlayerId,
     getPlayerSecret,
-} from '../helpers/requestValidation';
-import { getPlayer, verifyPlayer, verifyPlayerHost } from '../helpers/player';
+} from '../../helpers/requestValidation';
+import {
+    getPlayer,
+    verifyPlayer,
+    verifyPlayerHost,
+} from '../../helpers/player';
 
 import { Request } from 'express';
 

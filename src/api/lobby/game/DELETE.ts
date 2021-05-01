@@ -1,18 +1,18 @@
-import { getLobbyById, setLobbyGame } from '../../helpers/lobby';
+import { getLobbyById, setLobbyGame } from '../../../helpers/lobby';
 import {
     getLobbyId,
     getPlayerId,
     getPlayerSecret,
-} from '../../helpers/requestValidation';
+} from '../../../helpers/requestValidation';
 import {
     getPlayer,
     verifyPlayer,
     verifyPlayerHost,
-} from '../../helpers/player';
+} from '../../../helpers/player';
 
-import { GameResponse } from '../../types/gameTypes';
+import { GameResponse } from '../../../types/gameTypes';
 import { Request } from 'express';
-import { formatGameResponse } from '../../helpers/game';
+import { formatGameResponse } from '../../../helpers/game';
 
 export const deleteLobbyGame = async (
     request: Request,

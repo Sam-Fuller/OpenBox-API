@@ -28,6 +28,13 @@ const idValidation = (
     return id;
 };
 
+export const getWebsocketId = (event: any): string => {
+    return idValidation(
+        event.requestContext.connectionId,
+        `websocket connectionId`,
+    );
+};
+
 export const getPlayerName = (request: Request): string => {
     return nameValidation(request.body?.playerName);
 };

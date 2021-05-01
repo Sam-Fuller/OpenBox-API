@@ -1,22 +1,22 @@
-import { addPlayerToLobby, formatLobbyResponse } from '../../helpers/lobby';
+import { createLobby, formatLobbyResponse } from '../../helpers/lobby';
 import { createPlayer, formatPlayerSecretResponse } from '../../helpers/player';
-import { getLobbyId, getPlayerName } from '../../helpers/requestValidation';
 
 import { LobbyResponse } from '../../types/lobbyTypes';
-import { PlayerResponse } from '../../types/playerTypes';
+import { PlayerSecretResponse } from '../../types/playerTypes';
 import { Request } from 'express';
+import { getPlayerName } from '../../helpers/requestValidation';
 
-export const putLobbyPlayers = async (
+export const postLobby = async (
     request: Request,
 ): Promise<{
-    player: PlayerResponse;
+    player: PlayerSecretResponse;
     lobby: LobbyResponse;
 }> => {
     const playerName = getPlayerName(request);
-    const lobbyId = getLobbyId(request);
 
     const { player, secret } = createPlayer(playerName);
-    const lobby = await addPlayerToLobby(lobbyId, player);
+
+    const lobby = await createLobby(player);
 
     return {
         player: formatPlayerSecretResponse(player, secret),

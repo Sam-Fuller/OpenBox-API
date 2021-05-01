@@ -1,8 +1,11 @@
-import { formatGamemodeResponse, getGamemodeById } from '../helpers/gamemode';
+import {
+    formatGamemodeResponse,
+    getGamemodeById,
+} from '../../helpers/gamemode';
 
-import { GamemodeResponse } from '../types/gamemodeTypes';
+import { GamemodeResponse } from '../../types/gamemodeTypes';
 import { Request } from 'express';
-import { getGamemodeId } from '../helpers/requestValidation';
+import { getGamemodeId } from '../../helpers/requestValidation';
 
 export const getGamemode = async (
     request: Request,

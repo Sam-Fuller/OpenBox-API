@@ -1,20 +1,20 @@
-import { Game, GameResponse } from '../../types/gameTypes';
-import { getGamemodeById, getInitialState } from '../../helpers/gamemode';
+import { Game, GameResponse } from '../../../types/gameTypes';
+import { getGamemodeById, getInitialState } from '../../../helpers/gamemode';
 import {
     getGamemodeId,
     getLobbyId,
     getPlayerId,
     getPlayerSecret,
-} from '../../helpers/requestValidation';
-import { getLobbyById, setLobbyGame } from '../../helpers/lobby';
+} from '../../../helpers/requestValidation';
+import { getLobbyById, setLobbyGame } from '../../../helpers/lobby';
 import {
     getPlayer,
     verifyPlayer,
     verifyPlayerHost,
-} from '../../helpers/player';
+} from '../../../helpers/player';
 
 import { Request } from 'express';
-import { formatGameResponse } from '../../helpers/game';
+import { formatGameResponse } from '../../../helpers/game';
 
 export const putLobbyGame = async (
     request: Request,

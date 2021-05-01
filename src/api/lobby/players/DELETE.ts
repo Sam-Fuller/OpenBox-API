@@ -2,21 +2,21 @@ import {
     formatLobbyResponse,
     getLobbyById,
     removePlayerFromLobby,
-} from '../../helpers/lobby';
+} from '../../../helpers/lobby';
 import {
     getLobbyId,
     getPlayerId,
     getPlayerSecret,
     getTargetPlayerId,
-} from '../../helpers/requestValidation';
+} from '../../../helpers/requestValidation';
 import {
     getPlayer,
     verifyPlayer,
     verifyPlayerHost,
     verifyPlayerNotHost,
-} from '../../helpers/player';
+} from '../../../helpers/player';
 
-import { LobbyResponse } from '../../types/lobbyTypes';
+import { LobbyResponse } from '../../../types/lobbyTypes';
 import { Request } from 'express';
 
 export const deleteLobbyPlayers = async (

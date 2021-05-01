@@ -1,4 +1,4 @@
-service: my-serverless-app
+service: open-box
 
 provider:
     name: aws
@@ -7,10 +7,12 @@ provider:
     timeout: 10
     stage: production
     region: eu-central-1
+    websocketsApiName: open-box-websocket
+    websocketsApiRouteSelectionExpression: $request.body.action
 
 functions:
     api:
-        handler: lambda.universal
+        handler: lambda.api
         events:
             - http: OPTIONS /lobby
             - http: DELETE /lobby
@@ -26,3 +28,17 @@ functions:
             - http: PUT /lobby/game
             - http: OPTIONS /gamemode
             - http: GET /gamemode
+
+    connectionHandler:
+        handler: lambda.websocketConnection
+        events:
+            - websocket:
+                  route: $connect
+            - websocket:
+                  route: $disconnect
+
+    lobbyHandler:
+        handler: lambda.websocketAction
+        events:
+            - websocket:
+                  route: hello
