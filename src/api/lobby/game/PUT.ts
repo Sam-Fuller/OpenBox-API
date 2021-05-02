@@ -6,7 +6,11 @@ import {
     getPlayerId,
     getPlayerSecret,
 } from '../../../helpers/requestValidation';
-import { getLobbyById, setLobbyGame } from '../../../helpers/lobby';
+import {
+    getLobbyById,
+    setLobbyGame,
+    websocketLobbyUpdate,
+} from '../../../helpers/lobby';
 import {
     getPlayer,
     verifyPlayer,
@@ -40,6 +44,8 @@ export const putLobbyGame = async (
     };
 
     const updatedLobby = await setLobbyGame(lobbyId, game);
+
+    await websocketLobbyUpdate(updatedLobby);
 
     return {
         game: await formatGameResponse(updatedLobby.game),

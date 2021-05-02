@@ -4,6 +4,7 @@ export class Player {
     @prop() _id: string;
     @prop() hash: string;
     @prop() name: string;
+    @prop() websocketId?: string;
 }
 
 export class PlayerResponse {

@@ -1,3 +1,4 @@
+import { connectDB, disconnectDB } from '../database/database';
 import express, { Request, Response } from 'express';
 
 import bodyParser from 'body-parser';
@@ -142,6 +143,8 @@ export const apiResponseWrapper = async (
     endpointFunction: (request: Request) => unknown,
 ): Promise<void> => {
     try {
+        await connectDB();
+
         const result = await endpointFunction(request);
 
         console.log(200, { 'Content-Type': `application/json` });
@@ -161,5 +164,7 @@ export const apiResponseWrapper = async (
         });
         response.write(JSON.stringify(error));
         response.end();
+    } finally {
+        await disconnectDB();
     }
 };

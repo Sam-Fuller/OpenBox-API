@@ -10,6 +10,14 @@ provider:
     websocketsApiName: open-box-websocket
     websocketsApiRouteSelectionExpression: $request.body.action
 
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - 'execute-api:ManageConnections'
+              - 'execute-api:Invoke'
+          Resource:
+              - 'arn:aws:execute-api:*:*:**/@connections/*'
+
 functions:
     api:
         handler: lambda.api
@@ -37,8 +45,8 @@ functions:
             - websocket:
                   route: $disconnect
 
-    lobbyHandler:
+    actionHandler:
         handler: lambda.websocketAction
         events:
             - websocket:
-                  route: hello
+                  route: $default

@@ -14,6 +14,7 @@ import {
 } from '../../helpers/player';
 
 import { Request } from 'express';
+import { sendToLobby } from '../../helpers/websocket';
 
 export const deleteLobby = async (request: Request): Promise<unknown> => {
     const playerId = getPlayerId(request);
@@ -27,6 +28,8 @@ export const deleteLobby = async (request: Request): Promise<unknown> => {
     verifyPlayerHost(lobby, player);
 
     await deleteLobbyFunction(lobby);
+
+    sendToLobby(lobby, { lobby: {} });
 
     return {};
 };

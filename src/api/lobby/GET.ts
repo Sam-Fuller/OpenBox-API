@@ -1,4 +1,8 @@
-import { formatLobbyResponse, getLobbyById } from '../../helpers/lobby';
+import {
+    formatLobbyResponse,
+    getLobbyById,
+    websocketLobbyUpdate,
+} from '../../helpers/lobby';
 
 import { LobbyResponse } from '../../types/lobbyTypes';
 import { Request } from 'express';

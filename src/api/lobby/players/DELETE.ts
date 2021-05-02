@@ -2,6 +2,7 @@ import {
     formatLobbyResponse,
     getLobbyById,
     removePlayerFromLobby,
+    websocketLobbyUpdate,
 } from '../../../helpers/lobby';
 import {
     getLobbyId,
@@ -47,6 +48,8 @@ export const deleteLobbyPlayers = async (
 
     await removePlayerFromLobby(lobbyId, targetPlayer);
     const updatedLobby = await getLobbyById(lobbyId);
+
+    await websocketLobbyUpdate(updatedLobby);
 
     return {
         lobby: await formatLobbyResponse(updatedLobby),

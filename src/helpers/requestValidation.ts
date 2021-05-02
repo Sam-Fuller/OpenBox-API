@@ -35,6 +35,21 @@ export const getWebsocketId = (event: any): string => {
     );
 };
 
+export const getPlayerIdWs = (event: any): string => {
+    return idValidation(event.queryStringParameters?.playerId, `playerId`);
+};
+
+export const getPlayerSecretWs = (event: any): string => {
+    return idValidation(event.queryStringParameters?.secret, `secret`);
+};
+
+export const getLobbyIdWs = (event: any): string => {
+    return idValidation(
+        event.queryStringParameters?.lobbyId,
+        `lobbyId`,
+    ).toUpperCase();
+};
+
 export const getPlayerName = (request: Request): string => {
     return nameValidation(request.body?.playerName);
 };
@@ -47,12 +62,12 @@ export const getPlayerSecret = (request: Request): string => {
     return idValidation(request.headers?.secret, `secret`);
 };
 
-export const getTargetPlayerId = (request: Request): string => {
-    return idValidation(request.body?.playerId, `target playerId`);
-};
-
 export const getLobbyId = (request: Request): string => {
     return idValidation(request.headers?.lobbyid, `lobbyId`).toUpperCase();
+};
+
+export const getTargetPlayerId = (request: Request): string => {
+    return idValidation(request.body?.playerId, `target playerId`);
 };
 
 export const getGamemodeId = (request: Request): string => {

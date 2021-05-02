@@ -1,5 +1,10 @@
-import { connect } from './websocket/connect';
-import { disconnect } from './websocket/disconnect';
+import { connectDB, disconnectDB } from '../database/database';
+
+import { connect } from './connection/connect';
+import { disconnect } from './connection/disconnect';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const connectionHandler = async (
     event: any,
@@ -13,39 +18,38 @@ export const connectionHandler = async (
     }
 };
 
-// export const responseWrapper = async (
-//     event: any,
-//     context: any,
-//     callback: (a: null, response: unknown) => Promise<unknown>,
-//     //action: (event: unknown, context: unknown) => Promise<unknown>,
-// ): Promise<void> => {
-//     console.log(`event`, event);
-//     console.log(`context`, context);
-//     callback(null, { statusCode: 200, body: `helloworld` });
+export const actionHandler = async (
+    event: any,
+    context: any,
+    callback: (a: null, response: unknown) => Promise<unknown>,
+) => {
+    console.log(event);
+};
 
-//     // try {
-//     //     const result = await action(event, context);
-
-//     //     console.log(200, JSON.stringify(result));
-
-//     //     callback(null, {
-//     //         statusCode: 200,
-//     //         body: JSON.stringify(result),
-//     //     });
-//     // } catch (error) {
-//     //     console.log(error.code ? error.code : 500, JSON.stringify(error));
-
-//     //     callback(null, {
-//     //         statusCode: error.code ? error.code : 500,
-//     //         body: JSON.stringify(error),
-//     //     });
-//     // }
-// };
 export const wsResponseWrapper = async (
     event: any,
     callback: (a: null, response: unknown) => Promise<unknown>,
-    asdasdgadfgadfgadfgadfg: (event: unknown) => Promise<unknown>,
+    action: (event: unknown) => Promise<unknown>,
 ): Promise<void> => {
-    console.log(`event`, event);
-    callback(null, { statusCode: 200, body: `helloworld` });
+    await connectDB();
+
+    try {
+        const result = await action(event);
+
+        console.log(200, JSON.stringify(result));
+
+        callback(null, {
+            statusCode: 200,
+            body: JSON.stringify(result),
+        });
+    } catch (error) {
+        console.log(error.code ? error.code : 500, JSON.stringify(error));
+
+        callback(null, {
+            statusCode: error.code ? error.code : 500,
+            body: JSON.stringify(error),
+        });
+    }
+
+    await disconnectDB();
 };

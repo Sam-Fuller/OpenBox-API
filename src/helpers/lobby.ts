@@ -7,6 +7,7 @@ import { formatGameResponse } from './game';
 import { formatPlayerResponse } from './player';
 import { generateGameCode } from '../helpers/gameCode';
 import { lobbyDB } from '../database/database';
+import { sendToLobby } from './websocket';
 
 export const createLobby = async (player: Player): Promise<Lobby> => {
     const lobby: Lobby = {
@@ -42,14 +43,16 @@ export const addPlayerToLobby = async (
     lobbyId: string,
     player: Player,
 ): Promise<Lobby> => {
-    const updatedLobby = await lobbyDB.findOneAndUpdate(
+    const oldLobby = await lobbyDB.findOneAndUpdate(
         { _id: lobbyId },
         { $push: { players: player } },
     );
 
-    if (!updatedLobby) {
+    if (!oldLobby) {
         throw new APIError(500, `Could not add player`);
     }
+
+    const updatedLobby = getLobbyById(lobbyId);
 
     return updatedLobby;
 };
@@ -86,6 +89,31 @@ export const setLobbyGame = async (
     return await getLobbyById(lobbyId);
 };
 
+export const updatePlayer = async (
+    lobbyId: string,
+    player: Player,
+): Promise<Lobby> => {
+    let lobby = await lobbyDB.findOneAndUpdate(
+        { _id: lobbyId },
+        { $pull: { players: { _id: player._id } } },
+    );
+
+    if (!lobby) {
+        throw new APIError(500, `Could not update player`);
+    }
+
+    lobby = await lobbyDB.findOneAndUpdate(
+        { _id: lobbyId },
+        { $push: { players: player } },
+    );
+
+    if (!lobby) {
+        throw new APIError(500, `Could not update player`);
+    }
+
+    return await getLobbyById(lobbyId);
+};
+
 export const formatLobbyResponse = async (
     lobby: Lobby,
 ): Promise<LobbyResponse> => ({
@@ -98,3 +126,14 @@ export const formatLobbyResponse = async (
 
     game: await formatGameResponse(lobby.game),
 });
+
+export const websocketLobbyUpdate = async (lobby: Lobby): Promise<void> => {
+    console.log(`websocketLobbyUpdate`);
+    await sendToLobby(lobby, { lobby: lobby });
+};
+
+export const websocketLobbyUpdateById = async (
+    lobbyId: string,
+): Promise<void> => {
+    await websocketLobbyUpdate(await getLobbyById(lobbyId));
+};

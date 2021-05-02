@@ -1,4 +1,8 @@
-import { addPlayerToLobby, formatLobbyResponse } from '../../../helpers/lobby';
+import {
+    addPlayerToLobby,
+    formatLobbyResponse,
+    websocketLobbyUpdate,
+} from '../../../helpers/lobby';
 import {
     createPlayer,
     formatPlayerSecretResponse,
@@ -20,6 +24,9 @@ export const putLobbyPlayers = async (
 
     const { player, secret } = createPlayer(playerName);
     const lobby = await addPlayerToLobby(lobbyId, player);
+
+    console.log(`update`);
+    await websocketLobbyUpdate(lobby);
 
     return {
         player: formatPlayerSecretResponse(player, secret),
