@@ -5,20 +5,22 @@ import {
     websocketLobbyUpdate,
 } from '../../../helpers/lobby';
 import {
-    getLobbyId,
-    getPlayerId,
-    getPlayerSecret,
-    getTargetPlayerId,
-} from '../../../helpers/requestValidation';
-import {
+    formatPlayerResponse,
     getPlayer,
     verifyPlayer,
     verifyPlayerHost,
     verifyPlayerNotHost,
 } from '../../../helpers/player';
+import {
+    getLobbyId,
+    getPlayerId,
+    getPlayerSecret,
+    getTargetPlayerId,
+} from '../../../helpers/requestValidation';
 
 import { LobbyResponse } from '../../../types/lobbyTypes';
 import { Request } from 'express';
+import { websocketActionType } from '../../../types/websocketTypes';
 
 export const deleteLobbyPlayers = async (
     request: Request,
@@ -49,7 +51,14 @@ export const deleteLobbyPlayers = async (
     await removePlayerFromLobby(lobbyId, targetPlayer);
     const updatedLobby = await getLobbyById(lobbyId);
 
-    await websocketLobbyUpdate(updatedLobby);
+    const actionType
+        = player._id === targetPlayer._id ?
+            websocketActionType.PLAYER_LEFT
+            : websocketActionType.PLAYER_REMOVED;
+    await websocketLobbyUpdate(updatedLobby, {
+        type: actionType,
+        player: formatPlayerResponse(targetPlayer),
+    });
 
     return {
         lobby: await formatLobbyResponse(updatedLobby),

@@ -36,6 +36,7 @@ functions:
             - http: PUT /lobby/game
             - http: OPTIONS /gamemode
             - http: GET /gamemode
+            - http: GET /game
 
     connectionHandler:
         handler: lambda.websocketConnection

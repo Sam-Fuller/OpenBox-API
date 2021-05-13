@@ -15,8 +15,9 @@ import {
 
 import { Request } from 'express';
 import { sendToLobby } from '../../helpers/websocket';
+import { websocketActionType } from '../../types/websocketTypes';
 
-export const deleteLobby = async (request: Request): Promise<unknown> => {
+export const deleteLobby = async (request: Request): Promise<void> => {
     const playerId = getPlayerId(request);
     const playerSecret = getPlayerSecret(request);
     const lobbyId = getLobbyId(request);
@@ -29,7 +30,7 @@ export const deleteLobby = async (request: Request): Promise<unknown> => {
 
     await deleteLobbyFunction(lobby);
 
-    sendToLobby(lobby, { lobby: {} });
-
-    return {};
+    sendToLobby(lobby, {
+        action: { type: websocketActionType.LOBBY_DELETED },
+    });
 };

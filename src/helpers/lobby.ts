@@ -3,6 +3,7 @@ import { Player, PlayerResponse } from '../types/playerTypes';
 
 import { APIError } from '../types/types';
 import { Game } from '../types/gameTypes';
+import { WebsocketAction } from '../types/websocketTypes';
 import { formatGameResponse } from './game';
 import { formatPlayerResponse } from './player';
 import { generateGameCode } from '../helpers/gameCode';
@@ -127,13 +128,12 @@ export const formatLobbyResponse = async (
     game: await formatGameResponse(lobby.game),
 });
 
-export const websocketLobbyUpdate = async (lobby: Lobby): Promise<void> => {
-    console.log(`websocketLobbyUpdate`);
-    await sendToLobby(lobby, { lobby: lobby });
-};
-
-export const websocketLobbyUpdateById = async (
-    lobbyId: string,
+export const websocketLobbyUpdate = async (
+    lobby: Lobby,
+    action: WebsocketAction,
 ): Promise<void> => {
-    await websocketLobbyUpdate(await getLobbyById(lobbyId));
+    await sendToLobby(lobby, {
+        action: action,
+        lobby: await formatLobbyResponse(lobby),
+    });
 };

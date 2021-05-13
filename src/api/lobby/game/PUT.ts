@@ -19,6 +19,7 @@ import {
 
 import { Request } from 'express';
 import { formatGameResponse } from '../../../helpers/game';
+import { websocketActionType } from '../../../types/websocketTypes';
 
 export const putLobbyGame = async (
     request: Request,
@@ -38,14 +39,19 @@ export const putLobbyGame = async (
 
     const gamemode = await getGamemodeById(gamemodeId);
 
+    const initialState = await getInitialState(gamemode, lobby);
+
     const game: Game = {
         gamemode_id: gamemodeId,
-        currentState: await getInitialState(gamemode, lobby),
+        currentState: initialState.currentState,
+        playerViews: initialState.playerViews,
     };
 
     const updatedLobby = await setLobbyGame(lobbyId, game);
 
-    await websocketLobbyUpdate(updatedLobby);
+    await websocketLobbyUpdate(updatedLobby, {
+        type: websocketActionType.GAME_CHANGED,
+    });
 
     return {
         game: await formatGameResponse(updatedLobby.game),

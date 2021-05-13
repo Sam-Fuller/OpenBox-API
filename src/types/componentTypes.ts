@@ -1,25 +1,35 @@
 import { prop } from '@typegoose/typegoose';
 
 export class Component {
-    @prop() _id: string;
+    @prop() type: string;
 
-    @prop() requiredData: unknown;
+    @prop() data: unknown;
 }
 
 export class SubmitButtonComponent extends Component {
-    @prop() _id = `SubmitButton`;
+    @prop() type = `SubmitButton`;
 
-    @prop() requiredData: undefined;
+    @prop() data: undefined;
 }
 
 export class TextBoxComponent extends Component {
-    @prop() _id = `TextBox`;
+    @prop() type = `TextBox`;
 
-    @prop() requiredData: string;
+    @prop() data: string;
 }
 
 export class CardComponent extends Component {
-    @prop() _id = `Card`;
+    @prop() type = `Card`;
 
-    @prop() requiredData: string;
+    @prop() data: string;
+}
+
+export class PlayerView {
+    @prop() playerId: string;
+    @prop() view: Component[];
+}
+
+export class PlayerViewResponse {
+    playerId: string;
+    view: Component[];
 }

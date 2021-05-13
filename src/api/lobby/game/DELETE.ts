@@ -16,6 +16,7 @@ import {
 
 import { GameResponse } from '../../../types/gameTypes';
 import { Request } from 'express';
+import { WebsocketActionType } from '../../../types/websocketTypes';
 import { formatGameResponse } from '../../../helpers/game';
 
 export const deleteLobbyGame = async (
@@ -35,7 +36,9 @@ export const deleteLobbyGame = async (
 
     const updatedLobby = await setLobbyGame(lobbyId, undefined);
 
-    await websocketLobbyUpdate(updatedLobby);
+    await websocketLobbyUpdate(updatedLobby, {
+        type: WebsocketActionType.GAME_REMOVED,
+    });
 
     return {
         game: await formatGameResponse(updatedLobby.game),

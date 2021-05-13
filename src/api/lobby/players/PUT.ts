@@ -5,6 +5,7 @@ import {
 } from '../../../helpers/lobby';
 import {
     createPlayer,
+    formatPlayerResponse,
     formatPlayerSecretResponse,
 } from '../../../helpers/player';
 import { getLobbyId, getPlayerName } from '../../../helpers/requestValidation';
@@ -12,6 +13,7 @@ import { getLobbyId, getPlayerName } from '../../../helpers/requestValidation';
 import { LobbyResponse } from '../../../types/lobbyTypes';
 import { PlayerResponse } from '../../../types/playerTypes';
 import { Request } from 'express';
+import { websocketActionType } from '../../../types/websocketTypes';
 
 export const putLobbyPlayers = async (
     request: Request,
@@ -25,8 +27,10 @@ export const putLobbyPlayers = async (
     const { player, secret } = createPlayer(playerName);
     const lobby = await addPlayerToLobby(lobbyId, player);
 
-    console.log(`update`);
-    await websocketLobbyUpdate(lobby);
+    await websocketLobbyUpdate(lobby, {
+        type: websocketActionType.PLAYER_JOINED,
+        player: formatPlayerResponse(player),
+    });
 
     return {
         player: formatPlayerSecretResponse(player, secret),

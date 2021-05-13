@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { Lobby } from '../types/lobbyTypes';
 import { Player } from '../types/playerTypes';
+import { WebsocketMessage } from '../types/websocketTypes';
 
 export const getEndpoint = (): string => {
     return `ws.open-box.io`;
@@ -13,13 +14,32 @@ export const getAwsgwManagementApi = () => {
     });
 };
 
-export const sendToLobby = async (
-    lobby: Lobby,
-    message: any,
+export const sendToPlayer = async (
+    player: Player,
+    message: WebsocketMessage,
 ): Promise<void> => {
     const apigwManagementApi = getAwsgwManagementApi();
 
-    console.log(JSON.stringify(lobby.players));
+    if (!player.websocketId) return;
+
+    const params = {
+        ConnectionId: player.websocketId,
+        Data: JSON.stringify(message),
+    };
+
+    await apigwManagementApi
+        .postToConnection(params)
+        .promise()
+        .then(() => {
+            console.log(`updated player: ${player._id}`);
+        });
+};
+
+export const sendToLobby = async (
+    lobby: Lobby,
+    message: WebsocketMessage,
+): Promise<void> => {
+    const apigwManagementApi = getAwsgwManagementApi();
 
     for (let i = 0; i < lobby.players.length; i++) {
         const player = lobby.players[i];

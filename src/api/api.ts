@@ -6,6 +6,7 @@ import cors from 'cors';
 import { deleteLobby } from './lobby/DELETE';
 import { deleteLobbyGame } from './lobby/game/DELETE';
 import { deleteLobbyPlayers } from './lobby/players/DELETE';
+import { getGame } from './game/GET';
 import { getGamemode } from './gamemode/GET';
 import { getLobby } from './lobby/GET';
 import { getLobbyGame } from './lobby/game/GET';
@@ -134,6 +135,12 @@ app.get(
         apiResponseWrapper(request, response, getGamemode);
     },
 );
+
+app.options(`/game`, cors(corsOptionsDelegate));
+
+app.get(`/game`, cors(corsOptionsDelegate), jsonParser, (request, response) => {
+    apiResponseWrapper(request, response, getGame);
+});
 
 export const getAPI = (): unknown => app;
 
