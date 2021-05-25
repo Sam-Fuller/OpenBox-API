@@ -25,22 +25,20 @@ import { WebsocketActionType } from '../../../types/websocketTypes';
 export const deleteLobbyPlayers = async (
     request: Request,
 ): Promise<{ lobby: LobbyResponse }> => {
-    console.log(
-        `headers`,
-        typeof request.headers,
-        JSON.stringify(request.headers),
-    );
-
-    console.log(`body`, typeof request.body, JSON.stringify(request.body));
+    console.log(`DELETE /lobby/players`);
 
     const playerId = getPlayerId(request);
     const playerSecret = getPlayerSecret(request);
     const targetPlayerId = getTargetPlayerId(request);
     const lobbyId = getLobbyId(request);
 
+    console.log({ playerId, playerSecret, targetPlayerId, lobbyId });
+
     const lobby = await getLobbyById(lobbyId);
     const player = getPlayer(lobby, playerId);
     const targetPlayer = getPlayer(lobby, targetPlayerId);
+
+    console.log({ lobby, player, targetPlayer });
 
     verifyPlayer(player, playerSecret);
     if (player._id !== targetPlayer._id) {
@@ -50,6 +48,8 @@ export const deleteLobbyPlayers = async (
 
     await removePlayerFromLobby(lobbyId, targetPlayer);
     const updatedLobby = await getLobbyById(lobbyId);
+
+    console.log({ updatedLobby });
 
     const actionType
         = player._id === targetPlayer._id ?

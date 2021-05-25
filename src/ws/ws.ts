@@ -18,14 +18,6 @@ export const connectionHandler = async (
     }
 };
 
-export const actionHandler = async (
-    event: any,
-    context: any,
-    callback: (a: null, response: unknown) => Promise<unknown>,
-) => {
-    console.log(event);
-};
-
 export const wsResponseWrapper = async (
     event: any,
     callback: (a: null, response: unknown) => Promise<unknown>,
@@ -36,14 +28,18 @@ export const wsResponseWrapper = async (
     try {
         const result = await action(event);
 
-        console.log(200, JSON.stringify(result));
+        console.log(`response success`, 200, JSON.stringify(result));
 
         callback(null, {
             statusCode: 200,
             body: JSON.stringify(result),
         });
     } catch (error) {
-        console.log(error.code ? error.code : 500, JSON.stringify(error));
+        console.log(
+            `response error`,
+            error.code ? error.code : 500,
+            JSON.stringify(error),
+        );
 
         callback(null, {
             statusCode: error.code ? error.code : 500,

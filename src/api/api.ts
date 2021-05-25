@@ -154,17 +154,17 @@ export const apiResponseWrapper = async (
 
         const result = await endpointFunction(request);
 
-        console.log(200, { 'Content-Type': `application/json` });
-        console.log(JSON.stringify(result));
+        console.log(`response success`, 200, JSON.stringify(result));
 
         response.writeHead(200, { 'Content-Type': `application/json` });
         response.write(JSON.stringify(result));
         response.end();
     } catch (error) {
-        console.log(error.code ? error.code : 500, {
-            'Content-Type': `application/json`,
-        });
-        console.log(JSON.stringify(error));
+        console.log(
+            `response error`,
+            error.code ? error.code : 500,
+            JSON.stringify(error),
+        );
 
         response.writeHead(error.code ? error.code : 500, {
             'Content-Type': `application/json`,

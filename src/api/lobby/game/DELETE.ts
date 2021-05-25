@@ -24,12 +24,18 @@ export const deleteLobbyGame = async (
 ): Promise<{
     game?: GameResponse;
 }> => {
+    console.log(`DELETE /lobby/game`);
+
     const playerId = getPlayerId(request);
     const playerSecret = getPlayerSecret(request);
     const lobbyId = getLobbyId(request);
 
+    console.log({ playerId, playerSecret, lobbyId });
+
     const lobby = await getLobbyById(lobbyId);
     const player = getPlayer(lobby, playerId);
+
+    console.log({ lobby, player });
 
     verifyPlayer(player, playerSecret);
     verifyPlayerHost(lobby, player);

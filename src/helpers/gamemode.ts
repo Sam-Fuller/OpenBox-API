@@ -50,13 +50,12 @@ export const evaluateState = async (
         playerViews || []
     }; var context = ${context};${globalCode || ``};${code || ``}`;
 
-    console.log(allCode);
-
     let interpreter;
     try {
         interpreter = new Interpreter(allCode);
     } catch (e) {
-        console.log(`error`, e);
+        console.log(`error interpreting code`, e);
+        throw new APIError(500, e);
     }
 
     interpreter.run();

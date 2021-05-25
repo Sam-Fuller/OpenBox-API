@@ -12,10 +12,16 @@ export const postLobby = async (
     player: PlayerSecretResponse;
     lobby: LobbyResponse;
 }> => {
+    console.log(`POST /lobby`);
+
     const playerName = getPlayerName(request);
+
+    console.log({ playerName });
 
     const { player, secret } = createPlayer(playerName);
     const lobby = await createLobby(player);
+
+    console.log({ player, secret, lobby });
 
     return {
         player: formatPlayerSecretResponse(player, secret),

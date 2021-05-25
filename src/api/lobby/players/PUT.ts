@@ -21,11 +21,17 @@ export const putLobbyPlayers = async (
     player: PlayerResponse;
     lobby: LobbyResponse;
 }> => {
+    console.log(`PUT /lobby/player`);
+
     const playerName = getPlayerName(request);
     const lobbyId = getLobbyId(request);
 
+    console.log({ playerName, lobbyId });
+
     const { player, secret } = createPlayer(playerName);
     const lobby = await addPlayerToLobby(lobbyId, player);
+
+    console.log({ player, secret, lobby });
 
     await websocketLobbyUpdate(lobby, {
         type: WebsocketActionType.PLAYER_JOINED,

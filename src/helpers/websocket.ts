@@ -39,23 +39,7 @@ export const sendToLobby = async (
     lobby: Lobby,
     message: WebsocketMessage,
 ): Promise<void> => {
-    const apigwManagementApi = getAwsgwManagementApi();
-
     for (let i = 0; i < lobby.players.length; i++) {
-        const player = lobby.players[i];
-
-        if (!player.websocketId) continue;
-
-        const params = {
-            ConnectionId: player.websocketId,
-            Data: JSON.stringify(message),
-        };
-
-        await apigwManagementApi
-            .postToConnection(params)
-            .promise()
-            .then(() => {
-                console.log(`updated player: ${player._id}`);
-            });
+        await sendToPlayer(lobby.players[i], message);
     }
 };
