@@ -14,8 +14,8 @@ import {
 } from '../../helpers/player';
 
 import { Request } from 'express';
+import { WebsocketActionType } from '../../types/websocketTypes';
 import { sendToLobby } from '../../helpers/websocket';
-import { websocketActionType } from '../../types/websocketTypes';
 
 export const deleteLobby = async (request: Request): Promise<void> => {
     const playerId = getPlayerId(request);
@@ -31,6 +31,6 @@ export const deleteLobby = async (request: Request): Promise<void> => {
     await deleteLobbyFunction(lobby);
 
     sendToLobby(lobby, {
-        action: { type: websocketActionType.LOBBY_DELETED },
+        action: { type: WebsocketActionType.LOBBY_DELETED },
     });
 };

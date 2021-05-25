@@ -20,7 +20,7 @@ import {
 
 import { LobbyResponse } from '../../../types/lobbyTypes';
 import { Request } from 'express';
-import { websocketActionType } from '../../../types/websocketTypes';
+import { WebsocketActionType } from '../../../types/websocketTypes';
 
 export const deleteLobbyPlayers = async (
     request: Request,
@@ -53,8 +53,8 @@ export const deleteLobbyPlayers = async (
 
     const actionType
         = player._id === targetPlayer._id ?
-            websocketActionType.PLAYER_LEFT
-            : websocketActionType.PLAYER_REMOVED;
+            WebsocketActionType.PLAYER_LEFT
+            : WebsocketActionType.PLAYER_REMOVED;
     await websocketLobbyUpdate(updatedLobby, {
         type: actionType,
         player: formatPlayerResponse(targetPlayer),

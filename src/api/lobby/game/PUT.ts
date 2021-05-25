@@ -18,8 +18,8 @@ import {
 } from '../../../helpers/player';
 
 import { Request } from 'express';
+import { WebsocketActionType } from '../../../types/websocketTypes';
 import { formatGameResponse } from '../../../helpers/game';
-import { websocketActionType } from '../../../types/websocketTypes';
 
 export const putLobbyGame = async (
     request: Request,
@@ -50,7 +50,7 @@ export const putLobbyGame = async (
     const updatedLobby = await setLobbyGame(lobbyId, game);
 
     await websocketLobbyUpdate(updatedLobby, {
-        type: websocketActionType.GAME_CHANGED,
+        type: WebsocketActionType.GAME_CHANGED,
     });
 
     return {

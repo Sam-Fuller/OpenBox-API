@@ -1,8 +1,8 @@
+import { Component, PlayerView } from '../types/componentTypes';
 import { Gamemode, GamemodeResponse } from '../types/gamemodeTypes';
 
 import { APIError } from '../types/types';
 import { Lobby } from '../types/lobbyTypes';
-import { PlayerView } from '../types/componentTypes';
 import { formatLobbyResponse } from './lobby';
 import { gamemodeDB } from '../database/database';
 
@@ -39,16 +39,16 @@ export const evaluateState = async (
     globalCode?: string,
     currentState?: string,
     playerViews?: PlayerView[],
-    context?: string,
+    context?: Component[],
 ): Promise<{
     currentState: string;
     playerViews: PlayerView[];
 }> => {
-    const allCode = `var lobby = ${JSON.stringify(
-        await formatLobbyResponse(lobby),
-    )}; var state = ${currentState}; var playerViews = ${JSON.stringify(
-        playerViews,
-    )}; var context = ${context};${globalCode || ``};${code || ``}`;
+    const allCode = `var lobby = ${await formatLobbyResponse(
+        lobby,
+    )}; var state = ${currentState}; var playerViews = ${
+        playerViews || []
+    }; var context = ${context};${globalCode || ``};${code || ``}`;
 
     console.log(allCode);
 
@@ -78,6 +78,26 @@ export const getInitialState = async (
         gamemode.calculateState.initialState,
         gamemode.calculateState.sharedFunctions,
         lobby.game?.currentState,
+    );
+
+    return initialState;
+};
+
+export const submitAction = async (
+    gamemode: Gamemode,
+    lobby: Lobby,
+    context: Component[],
+): Promise<{
+    currentState: string;
+    playerViews: PlayerView[];
+}> => {
+    const initialState = evaluateState(
+        lobby,
+        gamemode.calculateState.initialState,
+        gamemode.calculateState.sharedFunctions,
+        lobby.game?.currentState,
+        lobby?.game?.playerViews,
+        context,
     );
 
     return initialState;

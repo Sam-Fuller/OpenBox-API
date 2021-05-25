@@ -1,3 +1,5 @@
+import { Component, getComponent } from '../types/componentTypes';
+
 import { APIError } from '../types/types';
 import { Request } from 'express';
 
@@ -26,6 +28,18 @@ const idValidation = (
     }
 
     return id;
+};
+
+const componentValidation = (componentsInput: unknown): Component => {
+    return getComponent(componentsInput);
+};
+
+const arrayValidation = <T>(input: T[], message: string): T[] => {
+    if (input.length === undefined || input.length === null) {
+        throw new APIError(400, `Invalid ${message}`);
+    }
+
+    return input;
 };
 
 export const getWebsocketId = (event: any): string => {
@@ -72,4 +86,10 @@ export const getTargetPlayerId = (request: Request): string => {
 
 export const getGamemodeId = (request: Request): string => {
     return idValidation(request.body?.gamemodeId, `gamemodeId`);
+};
+
+export const getContext = (request: Request): Component[] => {
+    return arrayValidation(request.body?.context, `context`).map((component) =>
+        componentValidation(component),
+    );
 };
