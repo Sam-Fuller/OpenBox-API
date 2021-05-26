@@ -32,6 +32,9 @@ export const sendToPlayer = async (
         .promise()
         .then(() => {
             console.log(`updated player: ${player._id}`);
+        })
+        .catch((error) => {
+            console.log(`failed to update player`, { player, error });
         });
 };
 
@@ -51,7 +54,12 @@ export const disconnectPlayer = async (player: Player): Promise<void> => {
 
     const apigwManagementApi = getAwsgwManagementApi();
 
-    apigwManagementApi.deleteConnection({
-        ConnectionId: player.websocketId,
-    });
+    apigwManagementApi
+        .deleteConnection({
+            ConnectionId: player.websocketId,
+        })
+        .promise()
+        .then(() => {
+            console.log(`websocket connection closed`, { player });
+        });
 };

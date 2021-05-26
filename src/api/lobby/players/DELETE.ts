@@ -21,6 +21,7 @@ import {
 import { LobbyResponse } from '../../../types/lobbyTypes';
 import { Request } from 'express';
 import { WebsocketActionType } from '../../../types/websocketTypes';
+import { disconnectPlayer } from '../../../helpers/websocket';
 
 export const deleteLobbyPlayers = async (
     request: Request,
@@ -59,6 +60,8 @@ export const deleteLobbyPlayers = async (
         type: actionType,
         player: formatPlayerResponse(targetPlayer),
     });
+
+    await disconnectPlayer(targetPlayer);
 
     return {
         lobby: await formatLobbyResponse(updatedLobby),
