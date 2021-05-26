@@ -55,7 +55,7 @@ export const deleteLobbyPlayers = async (
         = player._id === targetPlayer._id ?
             WebsocketActionType.PLAYER_LEFT
             : WebsocketActionType.PLAYER_REMOVED;
-    await websocketLobbyUpdate(updatedLobby, {
+    await websocketLobbyUpdate(lobby, {
         type: actionType,
         player: formatPlayerResponse(targetPlayer),
     });

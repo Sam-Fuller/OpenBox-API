@@ -43,3 +43,15 @@ export const sendToLobby = async (
         await sendToPlayer(lobby.players[i], message);
     }
 };
+
+export const disconnectPlayer = async (player: Player): Promise<void> => {
+    if (!player.websocketId) {
+        return;
+    }
+
+    const apigwManagementApi = getAwsgwManagementApi();
+
+    apigwManagementApi.deleteConnection({
+        ConnectionId: player.websocketId,
+    });
+};
